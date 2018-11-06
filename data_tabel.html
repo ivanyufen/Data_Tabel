@@ -321,7 +321,7 @@
                 document.getElementById("tab").style.visibility = "hidden"; //kalau gaada data lagi, tablenya hidden, tapi belum works
             }
         }
-        function funcHapus(x){
+        function funcHapus(x){ //memakai fungsi seperti ini supaya ga hanya tampilan yg di delete, tapi benar2 datanya, sehingga bisa lsg diisi data baru
             data.splice(x, 1); //remove array index ke button yg di click itu
             show(); //tampilkan table setelah di remove
         }
