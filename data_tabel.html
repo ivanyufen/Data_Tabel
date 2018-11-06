@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sort Object</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        button{
+            padding: 10px;
+        }
+        .reset{
+            color: white;
+            background-color: red;
+        }
+        .submit{
+            color: white;
+            background-color: blue;
+        }
+
+        table, th, td, tr{
+            border: 1px solid black;
+        }
+
+        tr,td, th{
+            padding: 15px;
+        }
+
+        table{
+            visibility: hidden; 
+        }
+        input{
+            padding: 10px;
+        }
+
+        tr:nth-child(odd){
+            background-color: gray;
+            color: white;
+        }
+
+        #trhead{
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<center>
+    <label for="nama">Nama: </label><input type="text" id="nama" placeholder="Isi nama...">
+    <label for="date">Tgl. Lahir: </label><input type="date" id="tanggalLahir" placeholder="Isi tgl lahir...">
+    <label for="kota">Kota: </label><input type="text" id="kota" placeholder="isi kota">
+    <br><br>
+    <button type="button" onclick="submit()" class="submit">D A F T A R</button>
+    <!-- <button type="button" onclick="reset()" class="reset">Reset</button> -->
+    <br><br>
+    <button type="button" onclick="sortNamaAscending()">Sort Nama 🠑 </button>
+    <button type="button" onclick="sortNamaDescending()">Sort Nama 🠓</button>
+    <button type="button" onclick="sortUmurAscending()">Sort Usia 🠑 </button>
+    <button type="button" onclick="sortUmurDescending()">Sort Usia 🠓</button>
+    <button type="button" onclick="sortKotaAscending()">Sort Kota 🠑 </button>
+    <button type="button" onclick="sortKotaDescending()">Sort Kota 🠓</button>
+    <!-- <button type="button" onclick="sortTglLahirAscending()">Sort Tgl Lahir 🠑 </button>
+    <button type="button" onclick="sortTglLahirDescending()">Sort Tgl Lahir 🠓</button> -->
+    <p id="jumlahItem"></p>
+    <table id="tab">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th colspan="3">Tanggal lahir</th>
+                <th>Zodiak</th>
+                <th>Usia</th> 
+                <th>Pensiun</th>
+                <th>Kota</th>
+                <th>Hapus</th>
+            </tr>
+        </thead>
+
+        <tbody id="tbody">
+            
+        </tbody>
+    </table>
+</center>
+    
+
+    <script>
+        var data = [];
+        var namaBulan = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        function submit(){
+            //assign value input user ke variable
+            var nama = document.getElementById("nama").value;
+            var tanggalLahir = document.getElementById("tanggalLahir").value;
+            var kota = document.getElementById("kota").value;
+
+            //validasi inputan
+            if(nama == "" || isNaN(nama) == false ){
+                alert("Nama harus diisi dan tidak boleh angka!");
+            
+            }
+            else if(tanggalLahir == ""){
+                alert("Tanggal lahir harus diisi!");
+            }
+            else if(kota == "" || isNaN(kota) == false){
+                alert("Kota harus diisi dan tidak boleh angka!");
+            }
+            else {
+
+                //object sementara untuk di push ke main array
+                var object = {
+                    name: nama, 
+                    date: function(){
+                    return tanggalLahir.split("-");
+                    },
+                    age: function(){
+                        var time = new Date();
+                        var thisYear = time.getFullYear();
+                        return thisYear - this.date()[0];
+                    },
+                    pensiun: function(){
+                        return this.age() - 55;
+                    },
+                    zodiac: function() {
+                        var month = this.date()[1];
+                        var day = this.date()[2];
+                        switch(true){
+                            case month == 12 && day >=22 || month == 1 && day <= 20: 
+                            return "Capricorn";
+                            break;
+                            
+                            case month == 1 && day <= 21 || month == 2 && day <=19:
+                            return "Aquarius";
+                            break;
+
+                            case month == 2 && day >= 20 || month == 3 && day <=20:
+                            return "Pisces";
+                            break;
+
+                            case month == 3 && day >= 21 || month == 3 && day <=19:
+                            return "Aries";
+                            break;
+
+                            case month == 4 && day >= 20 || month == 5 && day <=20:
+                            return "Taurus";
+                            break;
+
+                            case month == 5 && day >= 21 || month == 6 && day <=21: 
+                            return "Gemini";
+                            break;
+
+                            case month == 6 && day >= 22 || month == 7 && day <=23: 
+                            return "Cancer";
+                            break;
+
+                            case month == 7 && day >= 24 || month == 8 && day <=23: 
+                            return "Leo";
+                            break;
+
+                            case month == 8 && day >= 24 || month == 9 && day <=22: 
+                            return "Virgo";
+                            break;
+
+                            case month == 9 && day >= 24 || month == 10 && day <=22: 
+                            return "Libra";
+                            break;
+
+                            case month == 10 && day >= 23 || month == 11 && day <=22: 
+                            return "Scorpio";
+                            break;
+
+                            case month == 11 && day >= 23 || month == 12 && day <=20: 
+                            return "Sagitarius";
+                            break;
+
+                            default: return false;
+                        }
+                    },
+                    city: kota,
+                }
+                //push object ke main array
+                data.push(object);
+
+                //fungsi untuk menampilkan table
+                show();
+                }
+            }
+
+        function sortNamaAscending() {
+            document.getElementById("tbody").innerHTML = "";
+                data.sort(function(a,b){
+                    if(a.name == b.name){
+                        return 0;
+                    }
+                    else if(a.name < b.name){
+                        return -1
+                    }
+                    else {
+                        return 1;
+                    }
+                });
+                show();
+        }
+
+        function sortNamaDescending() {
+            document.getElementById("tbody").innerHTML = "";
+                data.sort(function(a,b){
+                    if(a.name == b.name){
+                        return 0;
+                    }
+                    else if(a.name < b.name){
+                        return 1
+                    }
+                    else {
+                        return -1;
+                    }
+                });
+                show();
+        }
+
+         function sortKotaAscending() {
+            document.getElementById("tbody").innerHTML = "";
+                data.sort(function(a,b){
+                    if(a.city == b.city){
+                        return 0;
+                    }
+                    else if(a.city < b.city){
+                        return -1
+                    }
+                    else {
+                        return 1;
+                    }
+                });
+                show();
+        }
+
+         function sortKotaDescending() {
+            document.getElementById("tbody").innerHTML = "";
+                data.sort(function(a,b){
+                    if(a.city == b.city){
+                        return 0;
+                    }
+                    else if(a.city < b.city){
+                        return 1
+                    }
+                    else {
+                        return -1;
+                    }
+                });
+                show();
+        }
+
+         function sortTglLahirAscending() {
+            document.getElementById("tbody").innerHTML = "";
+                data.sort(function(a,b){
+                    if(a.date() == b.date()){
+                        return 0;
+                    }
+                    else if(a.date() < b.date()){
+                        return -1
+                    }
+                    else {
+                        return 1;
+                    }
+                });
+                show();
+        }
+
+         function sortTglLahirDescending() {
+            document.getElementById("tbody").innerHTML = "";
+                data.sort(function(a,b){
+                    if(a.date() == b.date()){
+                        return 0;
+                    }
+                    else if(a.date() < b.date()){
+                        return -1
+                    }
+                    else {
+                        return 1;
+                    }
+                });
+                show();
+        }
+
+         function sortUmurAscending() {
+            document.getElementById("tbody").innerHTML = "";
+                data.sort(function(a,b){
+                    return a.age() - b.age();
+                });
+                show();
+        }
+
+         function sortUmurDescending() {
+            console.log(data[0][2])
+            document.getElementById("tbody").innerHTML = "";
+                data.sort(function(a,b){
+                    return b.age() - a.age();
+                });
+                show();
+        }
+
+        function show() {
+            document.getElementById("jumlahItem").innerHTML = "Jumlah data anda: " + data.length; //utk ngasitau jumlah data yg diinput
+            document.getElementById("tbody").innerHTML = ""; //supaya ga tampil double, isi dari tbody dikosongin dulu
+            data.forEach(function(x,index){ //loop ke masing2 data dan di print
+                document.getElementById("tbody").innerHTML += "<tr><td>" + x.name + "</td>" 
+                    + "<td>" + x.date()[2] + "</td>" 
+                    + "<td>" + namaBulan[parseInt(x.date()[1])] + "</td>"
+                    + "<td>" + x.date()[0] + "</td>" 
+                    + "<td>" + x.zodiac() + "</td>"
+                    + "<td>" + x.age() + "</td>" 
+                    + "<td>" + x.pensiun() + "</td>" 
+                    + "<td>" + x.city + "</td>"
+                    + "<td>" + "<button id='" + index + "' type='button' onclick='funcHapus(this.id)'>Hapus</button>" + "</td>"
+                    + "</tr>"
+            });
+            document.getElementById("tab").style.visibility = "visible"; //membuat table yang tadinya hidden jadi visible
+            if(data.length==0){
+                document.getElementById("jumlahItem").innerHTML = "";
+                document.getElementById("tab").style.visibility = "hidden"; //kalau gaada data lagi, tablenya hidden, tapi belum works
+            }
+        }
+        function funcHapus(x){
+            data.splice(x, 1); //remove array index ke button yg di click itu
+            show(); //tampilkan table setelah di remove
+        }
+
+        
+        
+        //fungsi untuk reset semua data dan tampilan
+        // function reset() {
+        //     data = [];
+        //     document.getElementById("jumlahItem").innerHTML = "";
+        //     document.getElementById("tbody").innerHTML = "";
+        //     document.getElementById("nama").value = "";
+        //     document.getElementById("tanggalLahir").value = "";
+        //     document.getElementById("kota").value = "";
+        //     document.getElementById("tab").style.visibility = "hidden";
+        // }
+
+
+    </script>
+</body>
+</html>
